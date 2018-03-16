@@ -9,10 +9,12 @@
 <h1>Hey {{ player_name }}, welcome to {{ room_name }}!</h1>
 
 We currently have {{ player_count }} people here.
+<br>
+<br>
 
-TODO
-
-</form>
+{% for player in players %}
+    {{ player }}<br>
+{% endfor %}
 
 </body>
 </html>

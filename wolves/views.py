@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .models import *
+from pip._vendor.requests.packages.urllib3 import HTTPResponse
+
+from .models import Room, Player
 from datetime import datetime
 
 
@@ -11,13 +13,15 @@ def room(request, room_name):
     try:
         room_object = Room.objects.get(name=room_name)
     except Room.DoesNotExist:
-        room_object = Room(name=room_name, player_count=0, time_started=datetime.now())
+        room_object = Room(name=room_name,
+                           player_count=0,
+                           time_started=datetime.now())
         room_object.save()
 
     context = {'room_name': room_name,
                'player_count': room_object.player_count,
                'time_started': room_object.time_started,
-               # 'players': [Player.objects.filter(room__name=room_name)],
+               'players': [player.name for player in Player.objects.filter(room__name=room_name)],
                }
 
     if 'player' in request.POST:
@@ -32,8 +36,11 @@ def room(request, room_name):
             room_object.player_count += 1
             room_object.save()
             context['player_count'] = room_object.player_count
+            context['players'].append(request.POST['player'])
+            return render(request, "wolves/player_room.html", context)
 
-        return render(request, "wolves/player_room.html", context)
+        else:
+            return render(request, "wolves/room.html", context)
 
     else:
 
