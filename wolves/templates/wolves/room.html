@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Wolf in {{ room_name }} </title>
+</head>
+<body>
+
+<h1>Welcome to {{ room_name }}!</h1>
+
+If you want to participate in this game,
+enter your name and put on your pokerface.
+
+<form action="{% url 'room' room_name %}"
+	  method="post">
+
+	{% csrf_token %}
+
+	<input type="text" name="player" value="Enter text" />
+	<input type="submit" value="Play">
+
+</form>
+
+</body>
+</html>
